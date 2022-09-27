@@ -23,3 +23,8 @@ cudnn download web: https://developer.nvidia.com/cudnn You need an account befor
  sudo cp lib/libcudnn* /usr/local/cuda/lib64/
  sudo chmod a+r /usr/local/cuda/lib64/libcudnn*
 ```
+
+
+# References
+## Driver
+https://github.com/mjiUST/driver_cuda_cudnn
