@@ -43,9 +43,21 @@ sudo apt update
 sudo apt install python3.9 
 ```
 
+## CUDA
+### locla mode
+```
+wget https://developer.download.nvidia.com/compute/cuda/11.4.0/local_installers/cuda_11.4.0_470.42.01_linux.run
+sudo sh cuda_11.4.0_470.42.01_linux.run
+```
+## rdma user lib
+```
+git clone git://github.com/rdma-core
+
+follow the README.md
+```
+
+
 # Driver prepareation
-
-
 ## other
 https://github.com/CentaurusInfra/alnair/wiki/GPU-node-preparation#gpu-node-preparation
 
@@ -60,6 +72,10 @@ cudnn download web: https://developer.nvidia.com/cudnn You need an account befor
  sudo cp lib/libcudnn* /usr/local/cuda/lib64/
  sudo chmod a+r /usr/local/cuda/lib64/libcudnn*
 ```
+
+## RDMA OFED  
+Kernel modules and RDMA tools included. 
+
 
 # Libraries
 https://pytorch.org/get-started/locally/
