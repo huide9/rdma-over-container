@@ -111,6 +111,13 @@ sudo make install
 ```
 mkdir build && cd build && ../configure --prefix=/usr/local --with-cuda --enable-mpi-thread-multiple --enable-debug --enable-mem-debug --enable-event-debug  && make -j 32 all && sudo make install 
 ```
+## pytorch with openmpi build first
+```
+git clone --recursive git://github.com/pytorch...
+cd pytorch
+python setup.py install 
+```
+
 
 # References
 ## Driver
