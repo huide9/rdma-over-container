@@ -36,7 +36,7 @@ fi
 ```
 ...
 ```
-### apt
+### apt installation
 ```
 sudo add-apt-repository ppa:deadsnakes/ppa 
 sudo apt update 
@@ -78,13 +78,39 @@ Kernel modules and RDMA tools included.
 
 
 # Libraries
+## pytorch (binary)
 https://pytorch.org/get-started/locally/
 ```
 conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
 ```
 
-
-
+## openmpi
+```
+sudo apt install openmpi-bin openmpi-common
+```
+The following will be installed when installing `openmpi-bin`:
+```
+ libfabric1 libhwloc-plugins libhwloc5 libopenmpi2 libpsm-infinipath1 ocl-icd-libopencl1 openmpi-bin openmpi-common
+ 
+```
+### Build from source:
+```
+mkdir build && cd build
+../configure --prefix=/usr/local --with-cuda --enable-mpi-thread-multiple
+```
+or with more debug info
+```
+../configure --prefix=/usr/local --with-cuda --enable-mpi-thread-multiple --enable-debug 
+../configure --prefix=/usr/local --with-cuda --enable-mpi-thread-multiple --enable-debug --enable-mem-debug --enable-event-debug ?
+```
+```
+make -j X all
+sudo make install
+```
+#### in my case:
+```
+mkdir build && cd build && ../configure --prefix=/usr/local --with-cuda --enable-mpi-thread-multiple --enable-debug --enable-mem-debug --enable-event-debug  && make -j 32 all && sudo make install 
+```
 
 # References
 ## Driver
