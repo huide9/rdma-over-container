@@ -113,11 +113,13 @@ mkdir build && cd build && ../configure --prefix=/usr/local --with-cuda --enable
 ```
 ## pytorch with openmpi build first
 ```
-git clone --recursive git://github.com/pytorch...
+#git clone --recursive git://github.com/pytorch...
+git clone git://github.com/pytorch...
 cd pytorch
+git checkout tags/v1.10.1 -b b1.10.1
+git submodule update --init --recursive
 python setup.py install 
 ```
-
 
 # References
 ## Driver
