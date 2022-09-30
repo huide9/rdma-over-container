@@ -122,6 +122,7 @@ git clone git://github.com/pytorch...
 cd pytorch
 git checkout tags/v1.10.1 -b b1.10.1
 git submodule update --init --recursive
+* pip3 install torchvision==
 python setup.py install 
 ```
 on your fielsystem directly:
@@ -137,6 +138,21 @@ try:
 ```
 pip3 install --upgrade pip
 ```
+some potential packages may need:
+```
+apt install python3.9-distutil
+```
 # References
 ## Driver
 https://github.com/mjiUST/driver_cuda_cudnn
+
+dependencies reference:
+```
+python >= 3.8 
+pytorch==1.7.1+cu101
+torchvision == 0.8.2 + cu101
+tensorboard == 2. 4.0
+numpy == 1.21.0
+opencv-python == 4.6.0
+pillow==9.2.0
+```
