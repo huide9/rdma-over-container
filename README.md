@@ -112,7 +112,11 @@ sudo make install
 mkdir build && cd build && ../configure --prefix=/usr/local --with-cuda --enable-mpi-thread-multiple --enable-debug --enable-mem-debug --enable-event-debug  && make -j 32 all && sudo make install 
 ```
 ## pytorch with openmpi build first
+if runing in conda
 ```
+export CMAKE_PREFIX_PATH="$(dirname $(which conda))/../" # [anaconda root directory]
+conda install numpy pyyaml mkl setuptools cmake cffi
+
 #git clone --recursive git://github.com/pytorch...
 git clone git://github.com/pytorch...
 cd pytorch
@@ -120,7 +124,19 @@ git checkout tags/v1.10.1 -b b1.10.1
 git submodule update --init --recursive
 python setup.py install 
 ```
+on your fielsystem directly:
+```
+pip3 install  numpy pyyaml mkl setuptools cmake cffi
 
+```
+if you hit below when `pip3 install cmake`:
+```
+    ModuleNotFoundError: No module named 'skbuild'
+```
+try:
+```
+pip3 install --upgrade pip
+```
 # References
 ## Driver
 https://github.com/mjiUST/driver_cuda_cudnn
