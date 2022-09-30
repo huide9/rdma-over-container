@@ -72,6 +72,13 @@ cudnn download web: https://developer.nvidia.com/cudnn You need an account befor
  sudo cp lib/libcudnn* /usr/local/cuda/lib64/
  sudo chmod a+r /usr/local/cuda/lib64/libcudnn*
 ```
+### Version verify:
+```
+$ cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -A 2
+or 
+$ cat /usr/local/cuda/include/cudnn_version.h | grep CUDNN_MAJOR -A 2
+
+```
 
 ## RDMA OFED  
 Kernel modules and RDMA tools included. 
