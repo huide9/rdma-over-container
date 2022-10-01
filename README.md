@@ -153,7 +153,7 @@ apt install python3.9-distutil
 ## Driver
 https://github.com/mjiUST/driver_cuda_cudnn
 
-dependencies reference:
+## dependencies reference:
 ```
 python >= 3.8 
 pytorch==1.7.1+cu101
@@ -162,4 +162,13 @@ tensorboard == 2. 4.0
 numpy == 1.21.0
 opencv-python == 4.6.0
 pillow==9.2.0
+```
+## know issues in `setuptools`
+```
+AttributeError: module 'setuptools._distutils' has no attribute 'version'
+```
+soltuion:
+```
+either use the nightly-release of PyTorch, or otherwise downgrade setup tools to setuptools version 59.5.0.
+I install even smaller version.
 ```
