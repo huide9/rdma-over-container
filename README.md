@@ -119,17 +119,28 @@ sudo make install
 mkdir build && cd build && ../configure --prefix=/usr/local --with-cuda --enable-mpi-thread-multiple --enable-debug --enable-mem-debug --enable-event-debug  && make -j 32 all && sudo make install 
 ```
 ## pytorch with openmpi build first
-if runing in conda
+if runing in conda, suggest to create a new env with `conda create --name targetEnv python=3.8` 
+
 ```
 export CMAKE_PREFIX_PATH="$(dirname $(which conda))/../" # [anaconda root directory]
-conda install numpy pyyaml mkl setuptools cmake cffi
+
+# read references section for setuptools installation first
+conda install numpy pyyaml mkl cmake cffi setuptools 
+
+conda install mkl mkl-include
+
+# version need to fit your goal
+conda install -c pytorch magma-cuda102 
 
 #git clone --recursive git://github.com/pytorch...
 git clone git://github.com/pytorch...
 cd pytorch
 git checkout tags/v1.10.1 -b b1.10.1
-git submodule update --init --recursive
-* pip3 install torchvision==
+git submodule sync
+git submodule update --init --recursive --jobs 0
+
+# pip3 install torchvision==
+conda install torchvision=
 python setup.py install 
 ```
 on your fielsystem directly:
