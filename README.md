@@ -119,7 +119,7 @@ sudo make install
 ```
 mkdir build && cd build && ../configure --prefix=/usr/local --with-cuda --enable-mpi-thread-multiple --enable-debug --enable-mem-debug --enable-event-debug  && make -j 32 all && sudo make install 
 ```
-## pytorch with openmpi build first
+## pytorch with openmpi (build ompi first)
 if runing in conda, suggest to create a new env with `conda create --name targetEnv python=3.8` 
 
 ```
@@ -132,8 +132,13 @@ conda install mkl mkl-include
 
 # version need to fit your goal
 conda install -c pytorch magma-cuda102 
+```
+##### Notes: for submodules and specific version
+`git clone --recursive git://github.com/pytorch...`
 
-#git clone --recursive git://github.com/pytorch...
+`git clone --recursive --branch v1.7.0 http://github.com/pytorch/pytorch`
+
+```
 git clone git://github.com/pytorch...
 cd pytorch
 git checkout tags/v1.10.1 -b b1.10.1
