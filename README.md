@@ -28,6 +28,7 @@ if [ -d "$CUDAPATH/bin" ] ; then
     PATH="$PATH:$CUDAPATH/bin"
 fi
 ```
+
 ###  creat conda env
 ```
 conda activate base
@@ -35,7 +36,7 @@ conda create --name targetEnv python=3.8
 ```
 
 ## python3.9 on host
-```
+
 ### apt installation
 ```
 sudo add-apt-repository ppa:deadsnakes/ppa 
