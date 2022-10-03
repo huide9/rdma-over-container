@@ -11,8 +11,7 @@ https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html
 ```
 bash Anaconda-latest-Linux-x86_64.sh
 ```
-
-#### bash:
+### bash env:
 bash install will set shell environment through `$HOME/.bashrc`, make sure the `$HOME/.profile` includes below settings:
 ```
 # if running bash
@@ -29,12 +28,13 @@ if [ -d "$CUDAPATH/bin" ] ; then
     PATH="$PATH:$CUDAPATH/bin"
 fi
 ```
-
-## python3.9 
-### conda
-
+###  creat conda env
 ```
-...
+conda activate base
+conda create --name targetEnv python=3.8
+```
+
+## python3.9 on host
 ```
 ### apt installation
 ```
