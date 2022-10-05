@@ -152,15 +152,23 @@ conda install -c pytorch magma-cuda102
 ```
 git clone git://github.com/pytorch...
 cd pytorch
-git checkout tags/v1.10.1 -b b1.10.1
+git checkout tags/v1.8.2 -b b1.8.2
 git submodule sync
 git submodule update --init --recursive --jobs 0
 
-# pip3 install torchvision==
-conda install torchvision=
 python setup.py install 
 ```
-on your fielsystem directly:
+
+### torchvision
+```
+git clone github.com:pytorch/vision.git
+cd vision
+git checkout tags/v0.9.2 -b b0.9.2
+python setup.py install
+```
+
+
+on your filesystem directly:
 ```
 pip3 install  numpy pyyaml mkl setuptools cmake cffi
 
