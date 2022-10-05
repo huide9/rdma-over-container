@@ -93,6 +93,7 @@ conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
 ```
 
 ## openmpi
+### apt install (cli ref)
 ```
 sudo apt install openmpi-bin openmpi-common
 ```
@@ -101,8 +102,18 @@ The following will be installed when installing `openmpi-bin`:
  libfabric1 libhwloc-plugins libhwloc5 libopenmpi2 libpsm-infinipath1 ocl-icd-libopencl1 openmpi-bin openmpi-common
  
 ```
+### conda install (cli ref)
+```
+conda activate <your env>
+conda install -c conda-forge openmpi<=[version info]>
+```
 ### Build from source:
 ```
+git clone git://github.com/...
+cd ompi
+git checkout tags/<tag_name> -b <branch_name>
+git submodule update --init --recursive
+./autogen.pl
 mkdir build && cd build
 ../configure --prefix=/usr/local --with-cuda --enable-mpi-thread-multiple
 ```
@@ -112,7 +123,7 @@ or with more debug info
 ../configure --prefix=/usr/local --with-cuda --enable-mpi-thread-multiple --enable-debug --enable-mem-debug --enable-event-debug ?
 ```
 ```
-make -j X all
+make -j32 all
 sudo make install
 ```
 #### in my case:
