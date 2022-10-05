@@ -83,7 +83,12 @@ $ cat /usr/local/cuda/include/cudnn_version.h | grep CUDNN_MAJOR -A 2
 
 ## RDMA OFED  
 Kernel modules and RDMA tools included. 
-
+#### driver download
+https://network.nvidia.com/products/infiniband-drivers/linux/mlnx_ofed/
+#### driver installation
+https://docs.nvidia.com/networking/display/MLNXOFEDv461000/Installing+Mellanox+OFED#InstallingMellanoxOFED-InstallationScript
+#### rdma-core (user space tools)
+This should be included in OFED installation package, in case missing, `rdma-core` can be built separately. 
 
 # Libraries
 ## pytorch (binary)
