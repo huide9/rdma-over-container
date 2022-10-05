@@ -142,9 +142,8 @@ if runing in conda, suggest to create a new env with `conda create --name target
 export CMAKE_PREFIX_PATH="$(dirname $(which conda))/../" # [anaconda root directory]
 
 # read references section for setuptools installation first
-conda install numpy pyyaml mkl cmake cffi setuptools 
-
-conda install mkl mkl-include
+# conda install numpy pyyaml mkl cmake cffi setuptools 
+conda install numpy ninja pyyaml mkl mkl-include setuptools cmake cffi typing_extensions future six requests dataclasses
 
 # version need to fit your goal
 conda install -c pytorch magma-cuda102 
