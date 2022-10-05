@@ -204,6 +204,7 @@ opencv-python == 4.6.0
 pillow==9.2.0
 ```
 ## know issues in `setuptools`
+### setuptools has no 'version' attribute
 ```
 AttributeError: module 'setuptools._distutils' has no attribute 'version'
 ```
@@ -211,4 +212,14 @@ soltuion:
 ```
 either use the nightly-release of PyTorch, or otherwise downgrade setup tools to setuptools version 59.5.0.
 I install even smaller version.
+```
+### ninja build stoped: submodule failed
+big hole here, took me some time . 
+```
+git clean -xdf
+python setup.py clean
+git submodule sync
+git submodule deinit -f .
+git submodule update --init --recursive
+python setup.py install
 ```
