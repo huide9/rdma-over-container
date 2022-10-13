@@ -85,6 +85,9 @@ $ cat /usr/local/cuda/include/cudnn_version.h | grep CUDNN_MAJOR -A 2
 Kernel modules and RDMA tools included. 
 #### driver download
 https://network.nvidia.com/products/infiniband-drivers/linux/mlnx_ofed/
+#### UBU20.04 LTS
+https://content.mellanox.com/ofed/MLNX_OFED-4.9-5.1.0.0/MLNX_OFED_LINUX-4.9-5.1.0.0-ubuntu20.04-x86_64.tgz
+
 #### driver installation
 https://docs.nvidia.com/networking/display/MLNXOFEDv461000/Installing+Mellanox+OFED#InstallingMellanoxOFED-InstallationScript
 #### rdma-core (user space tools)
