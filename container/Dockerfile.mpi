@@ -1,5 +1,5 @@
+#FROM nvidia/cuda:10.2-cudn8-devel-ubuntu18.04
 FROM sclinux1:443/repo_rdma/cuda:10.2-cudnn8-dev-ubu18
-# origin: nvidia/cuda:10.2-cudn8-devel-ubuntu18.04
 
 ENV PATH="/root/anaconda3/bin:${PATH}"
 ARG PATH="/root/anaconda3/bin:${PATH}"
@@ -14,9 +14,7 @@ RUN apt update && apt-get install -y wget git libcap2 net-tools libnuma-dev libu
 WORKDIR /opt
 
 # Basic tools
-RUN /bin/bash -c "echo #################################################"
-RUN /bin/bash -c "echo #      Installing Anaconda3                     #" 
-RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "echo ########### Installing Anaconda3 ####################"
 #RUN wget https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh \
 RUN wget ftp://anonymous:a@$FTP_SRV/pub/Anaconda3-2022.05-Linux-x86_64.sh \
     && mkdir /root/.conda \
@@ -30,9 +28,7 @@ RUN wget ftp://anonymous:a@$FTP_SRV/pub/Anaconda3-2022.05-Linux-x86_64.sh \
 ## python 2.7 - some of OFED pkgs need python2.6/2.7
 
 #### debug ####
-RUN /bin/bash -c "echo #################################################"
-RUN /bin/bash -c "echo #  Environment variables after conda installed  #"
-RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "echo ########### Env after conda installed ###############"
 RUN /bin/bash -c "echo $CONDA_PREFIX" && /bin/bash -c "set | grep conda"
 
 ### enter python27 env for OFED installation
@@ -42,9 +38,7 @@ ENV PATH="/root/anaconda3/envs/p27/bin:${PATH}"
 ARG PATH="/root/anaconda3/envs/p27/bin:${PATH}"
 
 #### debug ####
-RUN /bin/bash -c "echo #################################################"
-RUN /bin/bash -c "echo #      Installing MLNX_OFED_LINUX               #" 
-RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "echo ############ Installing MLNX_OFED_LINUX ##############" 
 RUN /bin/bash -c "set | grep conda "
 RUN /bin/bash -c "echo $CONDA_PREFIX "
 
@@ -65,24 +59,17 @@ RUN cd /opt \
 SHELL ["conda", "run", "-n", "base", "/bin/bash", "-c"]
 
 #### debug ####
-RUN /bin/bash -c "echo #################################################"
-RUN /bin/bash -c "echo #                 Install python 38             #" 
-RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "echo ############## Install python 3.8 ###############" 
 RUN /bin/bash -c "set | grep conda "
 RUN /bin/bash -c "echo $CONDA_PREFIX "
 
-## conda p38 and support lib
+### create & setup p38 env 
 RUN conda create -n p38 -y python=3.8 
-
-### enter p38 env for new env creation
 SHELL ["conda", "run", "-n", "p38", "/bin/bash", "-c"]
 ENV PATH="/root/anaconda3/envs/p38/bin:${PATH}"
 ARG PATH="/root/anaconda3/envs/p38/bin:${PATH}"
 
-#### debug ####
-RUN /bin/bash -c "echo #################################################"
-RUN /bin/bash -c "echo #           Building OMPI from source           #" 
-RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "echo ############## Building OMPI from source ##############" 
 RUN /bin/bash -c "set | grep conda "
 RUN /bin/bash -c "echo $CONDA_PREFIX "
 
@@ -104,13 +91,7 @@ RUN cd /opt \
     && make -j32 all \
     && make install
 
-############################
-## pytorch and submodules ##
-############################
-
-RUN /bin/bash -c "echo #################################################"
-RUN /bin/bash -c "echo #   Building pytorch with OMPI from source      #" 
-RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "echo ########## Building pytorch with OMPI from source ########" 
 RUN /bin/bash -c "set | grep conda "
 RUN /bin/bash -c "echo $CONDA_PREFIX "
 
@@ -129,9 +110,7 @@ RUN cd /opt \
     && python setup.py install
 
 ## torchvision
-RUN /bin/bash -c "echo #################################################"
-RUN /bin/bash -c "echo #   Building torchvision  from source           #" 
-RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "echo ########## Building torchvision from source ########"
 
 RUN cd /opt \
     && git clone https://github.com/pytorch/vision.git \
