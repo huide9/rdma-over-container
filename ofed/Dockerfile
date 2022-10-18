@@ -1,59 +1,95 @@
-# base image
 FROM sclinux1:443/repo_rdma/cuda:10.2-cudnn8-dev-ubu18
-# local copy of: nvidia/cuda:10.2-cudn8-devel-ubuntu18.04
+# origin: nvidia/cuda:10.2-cudn8-devel-ubuntu18.04
 
 ENV PATH="/root/anaconda3/bin:${PATH}"
 ARG PATH="/root/anaconda3/bin:${PATH}"
 ENV OS_VER ubuntu18.04
 ENV PLATFORM x86_64
 ENV MOFED_VER 4.9-5.1.0.0
+ENV FTP_SRV="10.145.41.34"
 
 # install linux tools
-RUN apt update && apt-get install -y wget git libcap2 net-tools libnuma-dev libudev-dev libz-dev vim iputils-ping
+RUN apt update && apt-get install -y wget git libcap2 net-tools libnuma-dev libudev-dev libz-dev vim iputils-ping 
 
 WORKDIR /opt
 
 # Basic tools
-###########
-## conda ##
-###########
-RUN wget https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh \
+RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "echo #      Installing Anaconda3                     #" 
+RUN /bin/bash -c "echo #################################################"
+#RUN wget https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh \
+RUN wget ftp://anonymous:a@$FTP_SRV/pub/Anaconda3-2022.05-Linux-x86_64.sh \
     && mkdir /root/.conda \
     && bash Anaconda3-2022.05-Linux-x86_64.sh -b \
-    && rm -f Anaconda3-2022.05-Linux-x86_64.sh \
-    && conda install -y sphinx_rtd_theme recommonmark 
+    && rm -f Anaconda3-2022.05-Linux-x86_64.sh  \
+    && conda init bash \
+    && conda update -y -n base -c defaults conda
 
-RUN conda activate && conda update -y -n base -c defaults conda
+## RDMA drivers and tools support
 
 ## python 2.7 - some of OFED pkgs need python2.6/2.7
+
+#### debug ####
+RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "echo #  Environment variables after conda installed  #"
+RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "echo $CONDA_PREFIX" && /bin/bash -c "set | grep conda"
+
+### enter python27 env for OFED installation
 RUN conda create -n p27 -y python=2.7 
-
-# RDMA drivers and tools support
-##########
-## OFED ##
-##########
-
 SHELL ["conda", "run", "-n", "p27", "/bin/bash", "-c"]
-RUN conda activate p27 \
-    && wget https://content.mellanox.com/ofed/MLNX_OFED-4.9-5.1.0.0/MLNX_OFED_LINUX-4.9-5.1.0.0-ubuntu18.04-x86_64.tgz \
+ENV PATH="/root/anaconda3/envs/p27/bin:${PATH}"
+ARG PATH="/root/anaconda3/envs/p27/bin:${PATH}"
+
+#### debug ####
+RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "echo #      Installing MLNX_OFED_LINUX               #" 
+RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "set | grep conda "
+RUN /bin/bash -c "echo $CONDA_PREFIX "
+
+#RUN cd /opt \
+#    && wget https://content.mellanox.com/ofed/MLNX_OFED-4.9-5.1.0.0/MLNX_OFED_LINUX-4.9-5.1.0.0-ubuntu18.04-x86_64.tgz \
+
+RUN cd /opt \
+    && wget ftp://anonymous:a@$FTP_SRV/pub/MLNX_OFED_LINUX-4.9-5.1.0.0-ubuntu18.04-x86_64.tgz \
     && tar xzf MLNX_OFED_LINUX-4.9-5.1.0.0-ubuntu18.04-x86_64.tgz \
     && cd MLNX_OFED_LINUX-4.9-5.1.0.0-ubuntu18.04-x86_64 \
-    && ./mlnxofedinstall --force
+    && ./mlnxofedinstall --force \
+    && rm -rf /opt/MLNX_OFED_LINUX-4.9-5.1.0.0-ubuntu18.04-x86_64*
 
-###
-###  the following image contains the above results:                ###
+##  the following image contains the above results:                ###
 # FROM szlinux1:443/repo_rdma/ubu18:cuda102-cudnn8-ofed4.9-conda-python27
 
+### enter base env for new env creation
+SHELL ["conda", "run", "-n", "base", "/bin/bash", "-c"]
+
+#### debug ####
+RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "echo #                 Install python 38             #" 
+RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "set | grep conda "
+RUN /bin/bash -c "echo $CONDA_PREFIX "
+
 ## conda p38 and support lib
-RUN conda create -n p38 -y python=3.8 \
-    && conda activate p38 \
-    && conda install -y sphinx_rgd_theme -c "conda-forge/label/gcc7"
+RUN conda create -n p38 -y python=3.8 
 
+### enter p38 env for new env creation
 SHELL ["conda", "run", "-n", "p38", "/bin/bash", "-c"]
+ENV PATH="/root/anaconda3/envs/p38/bin:${PATH}"
+ARG PATH="/root/anaconda3/envs/p38/bin:${PATH}"
 
-###########
-## ompi  ##
-###########
+#### debug ####
+RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "echo #           Building OMPI from source           #" 
+RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "set | grep conda "
+RUN /bin/bash -c "echo $CONDA_PREFIX "
+
+
+## dependencies
+RUN conda install -y sphinx_rtd_theme -c "conda-forge/label/gcc7" \
+    && conda install -y recommonmark 
 
 ### the tag keep updating, modify to get the latest v5 of ompi
 RUN cd /opt \
@@ -71,16 +107,21 @@ RUN cd /opt \
 ############################
 ## pytorch and submodules ##
 ############################
-# export CMAKE_PREFIX_PATH="$(dirname $(which conda))/../" \
 
+RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "echo #   Building pytorch with OMPI from source      #" 
+RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "set | grep conda "
+RUN /bin/bash -c "echo $CONDA_PREFIX "
+
+RUN conda install -y numpy 
+RUN conda install -y ninja pyyaml mkl mkl-include setuptools cmake cffi 
+RUN conda install -y typing_extensions future six requests dataclasses 
+RUN conda install -c pytorch -y magma-cuda102 
 RUN cd /opt \
-    && conda create -n p38 -y python=3.8 \
-    && conda activate p38 \
-    && export CMAKE_PREFIX_PATH=$CONDA_PREFIX \
-    && conda install -y numpy ninja pyyaml mkl mkl-include setuptools cmake cffi typing_extensions future six requests dataclasses \
-    && conda install -c pytorch -y magma-cuda102 \
     && git clone https://github.com/pytorch/pytorch.git \
     && cd pytorch && git checkout tags/v1.8.2 -b b1.8.2 \
+    && export CMAKE_PREFIX_PATH=$CONDA_PREFIX \
     && git clean -xdf && python setup.py clean \
     && git submodule sync \
     && git submodule deinit -f . \
@@ -88,14 +129,13 @@ RUN cd /opt \
     && python setup.py install
 
 ## torchvision
+RUN /bin/bash -c "echo #################################################"
+RUN /bin/bash -c "echo #   Building torchvision  from source           #" 
+RUN /bin/bash -c "echo #################################################"
+
 RUN cd /opt \
     && git clone https://github.com/pytorch/vision.git \
     && cd vision \
     && git checkout tags/v0.9.2 -b b0.9.2 \
     && python setup.py install
 
-### alnair
-#RUN cd /opt \
-#    && git clone https://github.com/CentaurusInfra/alnair.git \
-#    && cd alnair/test/distributed-training/  
-    
