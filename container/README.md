@@ -18,3 +18,16 @@ docker exec -it <container> /bin/bash
 # python mnist-distribured.py -n 1 -g 4 -i 0
 
 ```
+
+
+##nccl-rdma-sharp-plugins
+### build from source
+```
+cd nccl-rdma-sharp-plugins
+./autogen.pl
+export LDFLAGS="$LDFLAGS -L/usr/local/cuda/lib"
+export CFLAGS="CFLAGS -I/usr/local/cuda/include"
+./configure
+make 
+make install
+```
