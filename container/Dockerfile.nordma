@@ -1,0 +1,14 @@
+FROM sclinux1:443/repo_platform/cuda:11.6.0-devel-ubuntu20.04
+# repo setting: https://docs.google.com/document/d/1sD1igyoOl5dik7lUxfMl7d0MrcgN5QuvWWVB7hP7e3o/edit?usp=share_link
+
+ENV OS_VER ubuntu20.04
+ENV PLATFORM x86_64
+WORKDIR /opt
+
+# install linux tools
+RUN apt update && apt-get install -y python3.8 python3-pip git vim net-tools wget libcap2  libnuma-dev libudev-dev libz-dev iputils-ping libtool flex autoconf build-essential devscripts debhelper fakeroot
+
+RUN ln -s /usr/bin/python3.8 /usr/bin/python 
+
+RUN pip3 install -y torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
+
