@@ -1,0 +1,39 @@
+FROM sclinux1:443/repo_platform/cuda:11.6.0-devel-ubuntu20.04
+
+# repo setting: https://docs.google.com/document/d/1sD1igyoOl5dik7lUxfMl7d0MrcgN5QuvWWVB7hP7e3o/edit?usp=share_link
+
+#ENV PATH=""
+#ARG PATH=""
+ENV OS_VER ubuntu20.04
+ENV PLATFORM x86_64
+ENV MOFED_VER 5.8
+ENV FTP_SRV="10.145.41.34"
+ENV NIC_DRV="MLNX_OFED_LINUX-5.8-1.0.1.1-ubuntu20.04-x86_64.tgz"
+ENV NIC_DRV_DIR="MLNX_OFED_LINUX-5.8-1.0.1.1-ubuntu20.04-x86_64"
+
+WORKDIR /opt
+
+# install linux tools
+RUN apt update && apt-get install -y python3.8 python3-pip git vim net-tools wget libcap2  libnuma-dev libudev-dev libz-dev iputils-ping libtool flex autoconf build-essential devscripts debhelper fakeroot iproute2
+
+RUN ln -s /usr/bin/python3.8 /usr/bin/python 
+
+RUN cd /opt \
+    && wget ftp://anonymous:a@$FTP_SRV/pub/$NIC_DRV \
+    && tar xzf $NIC_DRV \
+    && cd $NIC_DRV_DIR \
+    && ./mlnxofedinstall --force \
+    && rm -rf /opt/$NIC_DRV
+
+RUN cd /opt \
+    && git clone https://github.com/NVIDIA/nccl.git \
+    && cd nccl \
+    && git checkout v2.16 \
+    && make -j src.build \
+    && make pkg.debian.build \
+    && dpkg -i build/pkg/deb/libnccl2-*.deb \
+    && dpkg -i build/pkg/deb/libnccl-dev-*.deb 
+
+
+RUN pip3 install -y torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
+
